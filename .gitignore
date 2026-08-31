@@ -1,1 +1,6 @@
 .projectenv/
+*.npy
+*.mat
+*.csv
+vame_pipeling_aug17-Aug18-2026/data/
+
