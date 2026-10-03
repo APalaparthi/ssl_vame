@@ -1,7 +1,12 @@
-import pandas as pd 
-import scipy.ndimage as ndimage
-import numpy as np
+'''
+Applies a strict 0.95 threshold to convert continuous likelihoods into 
+binary contact states.
+Uses signal processing (Autocorrelogram) across all 6 legs to calculate the exact 
+temporal step duration of the insect.
+'''
 
+import pandas as pd 
+import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal 
 import math
@@ -20,21 +25,10 @@ print(data_a.shape)
 print(data_a.head())
 print(data_a.describe())
 
-#smoothing
 data_np=data_a.to_numpy()
-#data_sm=ndimage.gaussian_filter(data_np,sigma=2.0,mode='nearest', axes=0)
-
-#plotting between the data_np and data_sm (unsmoothed vs smoothed)
-
-#plt.plot(data_np[:100,0],label='unsmoothed',color='red',alpha=0.5)
-#plt.plot(data_sm[:100,0],label='smoothed',color='blue')
-#plt.legend()
-#plt.show()
-#plt.savefig('comparison_plot.png')
-#plt.clf()
 
 
-#threshold=0.9
+#threshold=0.95
 data_bi=np.where(data_np>0.95, 1,0)
 print(data_bi[:10, :])
 
@@ -46,7 +40,7 @@ np.save('/its/home/ap2037/ssl_vame/data/contact_data_binary.npy',data_bi)
 acg=[]
 for i in range(6):
     legs_d=data_bi[:,i]
-    #leg1=data_bi[:,0]
+    
     legs_cen=(legs_d-np.mean(legs_d))/np.std(legs_d) #standardization/ z-score normalization
     legs_corr=signal.correlate(legs_cen,legs_cen,mode='full',method='auto')
     #Normalizing/scaling the values of raw correlator
@@ -58,7 +52,7 @@ for i in range(6):
 acg_avg=np.mean(acg,axis=0)
 acg_avg=np.fft.ifftshift(acg_avg)
 N=len(legs_cen)
-lags=np.arange(-N+1,N)
+#lags=np.arange(-N+1,N)
 
 plt.plot(acg_avg)
 plt.title("Average_ACG of all the legs")
@@ -85,4 +79,5 @@ print('first_peak:', satellite_peak)
 
 # Window calculation based on the peak
 window_size=5*step_duration
+print('window size :', window_size)
 

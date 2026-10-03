@@ -1,3 +1,13 @@
+'''
+VAME's default `create_trainset()` method automatically attempts to group and package 
+raw continuous data, causing the core PyTorch model to crash.
+
+This script acts as a custom data packager. It takes our 0.95-thresholded binary 
+contact data (0s and 1s) and uses a random sliding window technique to construct a strict 
+3D tensor (Batch x Time x Features) and splits into train and test sets. This allows us to feed the dataset directly into 
+our custom PyTorch DataLoader without dimensional mismatches.
+'''
+
 import numpy as np
 import random
 import os

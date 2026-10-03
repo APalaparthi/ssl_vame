@@ -24,8 +24,8 @@ test_fraction: 0.1
 # RNN model general hyperparameter:
 pretrained_model: None
 pretrained_weights: false
-num_features: 8         # initially 12
-batch_size: 32          # initially 256
+num_features: 8         # Modified and initially 12
+batch_size: 32          # Modified and initially 256
 
 pose_labels:       # <--- ADD THIS SECTION HERE
 - L1
